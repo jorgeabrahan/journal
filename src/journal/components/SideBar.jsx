@@ -13,8 +13,11 @@ import {
 } from '@mui/material'
 import { TurnedInNot } from '@mui/icons-material'
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
 export const SideBar = ({ drawerWidth = 240 }) => {
+  const { displayName } = useSelector((store) => store.auth)
+
   return (
     <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
       <Drawer
@@ -30,7 +33,7 @@ export const SideBar = ({ drawerWidth = 240 }) => {
       >
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
-            Jorge Abrahan
+            {displayName}
           </Typography>
         </Toolbar>
         <Divider />
