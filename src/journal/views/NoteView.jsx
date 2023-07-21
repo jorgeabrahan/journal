@@ -5,10 +5,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from '../../hooks/'
 import { useEffect, useMemo } from 'react'
 import { setActiveNote, startSavingNote } from '../../store/journal'
+import PopupManager from 'https://cdn.jsdelivr.net/gh/jorgeabrahan/popup_library@66c9181/popup/Popup.js'
 
+const Popup = new PopupManager('Actualización nota', 'close')
 export const NoteView = () => {
   const dispatch = useDispatch()
-  const { active: note } = useSelector((store) => store.journal)
+  const { active: note, messageSaved, isSaving } = useSelector((store) => store.journal)
   const { body, title, date, onInputChange, formState } = useForm(note)
   const dateString = useMemo(() => {
     const newDate = new Date(date)
@@ -17,6 +19,11 @@ export const NoteView = () => {
   useEffect(() => {
     dispatch(setActiveNote(formState))
   }, [formState])
+  useEffect(() => {
+    if (messageSaved.length > 0) {
+      Popup.content(messageSaved).options({ position: 'center' }).show()
+    }
+  }, [messageSaved])
 
   const onSaveNote = () => {
     dispatch(startSavingNote())
@@ -36,7 +43,7 @@ export const NoteView = () => {
         </Typography>
       </Grid>
       <Grid item>
-        <Button color="primary" sx={{ padding: 2 }} onClick={onSaveNote}>
+        <Button disabled={isSaving} color="primary" sx={{ padding: 2 }} onClick={onSaveNote}>
           <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
           Guardar
         </Button>
