@@ -1,10 +1,10 @@
-import { SaveOutlined, UploadOutlined } from '@mui/icons-material'
+import { DeleteOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material'
 import { Button, Grid, IconButton, TextField, Typography } from '@mui/material'
 import { ImageGallery } from '../components'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from '../../hooks/'
 import { useEffect, useMemo, useRef } from 'react'
-import { setActiveNote, startSavingNote } from '../../store/journal'
+import { setActiveNote, startSavingNote, startUploadingFiles } from '../../store/journal'
 import PopupManager from 'https://cdn.jsdelivr.net/gh/jorgeabrahan/popup_library@66c9181/popup/Popup.js'
 
 const Popup = new PopupManager('Actualización nota', 'close')
@@ -31,8 +31,9 @@ export const NoteView = () => {
   const onSaveNote = () => dispatch(startSavingNote())
   const onFileInputChange = ({ target }) => {
     if (target.files === 0) return
-    console.log(target.files)
+    dispatch(startUploadingFiles(target.files))
   }
+  const onDelete = () => {}
   return (
     <Grid
       className="animate__animated animate__fadeIn animate__faster"
@@ -94,7 +95,13 @@ export const NoteView = () => {
           onChange={onInputChange}
         />
       </Grid>
-      <ImageGallery />
+      <Grid container justifyContent="end">
+        <Button onClick={onDelete} sx={{ mt: 2 }} color="error">
+          <DeleteOutline />
+          Borrar
+        </Button>
+      </Grid>
+      <ImageGallery images={note.imageUrls} />
     </Grid>
   )
 }
