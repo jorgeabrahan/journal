@@ -1,9 +1,9 @@
-import { SaveOutlined } from '@mui/icons-material'
-import { Button, Grid, TextField, Typography } from '@mui/material'
+import { SaveOutlined, UploadOutlined } from '@mui/icons-material'
+import { Button, Grid, IconButton, TextField, Typography } from '@mui/material'
 import { ImageGallery } from '../components'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from '../../hooks/'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { setActiveNote, startSavingNote } from '../../store/journal'
 import PopupManager from 'https://cdn.jsdelivr.net/gh/jorgeabrahan/popup_library@66c9181/popup/Popup.js'
 
@@ -16,6 +16,9 @@ export const NoteView = () => {
     const newDate = new Date(date)
     return newDate.toUTCString()
   }, [date])
+
+  const fileInputRef = useRef()
+
   useEffect(() => {
     dispatch(setActiveNote(formState))
   }, [formState])
@@ -25,8 +28,10 @@ export const NoteView = () => {
     }
   }, [messageSaved])
 
-  const onSaveNote = () => {
-    dispatch(startSavingNote())
+  const onSaveNote = () => dispatch(startSavingNote())
+  const onFileInputChange = ({ target }) => {
+    if (target.files === 0) return
+    console.log(target.files)
   }
   return (
     <Grid
@@ -43,6 +48,22 @@ export const NoteView = () => {
         </Typography>
       </Grid>
       <Grid item>
+        <input
+          type="file"
+          ref={fileInputRef}
+          multiple
+          onChange={onFileInputChange}
+          style={{ display: 'none' }}
+        />
+        <IconButton
+          color="primary"
+          disabled={isSaving}
+          onClick={() => {
+            fileInputRef.current.click()
+          }}
+        >
+          <UploadOutlined />
+        </IconButton>
         <Button disabled={isSaving} color="primary" sx={{ padding: 2 }} onClick={onSaveNote}>
           <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
           Guardar
