@@ -1,22 +1,14 @@
-import {
-  Box,
-  Divider,
-  Drawer,
-  Grid,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-  Typography
-} from '@mui/material'
-import { TurnedInNot } from '@mui/icons-material'
+import { Box, Divider, Drawer, List, Toolbar, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { SideBarItem } from './SideBarItem'
+import { setActiveNote } from '../../store/journal/journalSlice'
 
 export const SideBar = ({ drawerWidth = 240 }) => {
+  const dispatch = useDispatch()
   const { displayName } = useSelector((store) => store.auth)
+  const { notes } = useSelector((store) => store.journal)
+  const onNoteClicked = (note) => dispatch(setActiveNote(note))
 
   return (
     <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
@@ -38,18 +30,8 @@ export const SideBar = ({ drawerWidth = 240 }) => {
         </Toolbar>
         <Divider />
         <List>
-          {['Enero', 'Febrero', 'Marzo', 'Abril'].map((text) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <TurnedInNot />
-                </ListItemIcon>
-                <Grid container>
-                  <ListItemText primary={text} />
-                  <ListItemText secondary={'Officia ullamco ullamco officia exercitation.'} />
-                </Grid>
-              </ListItemButton>
-            </ListItem>
+          {notes.map((note) => (
+            <SideBarItem key={note.id} {...note} handleNoteClicked={() => onNoteClicked(note)} />
           ))}
         </List>
       </Drawer>
