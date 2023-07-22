@@ -4,7 +4,12 @@ import { ImageGallery } from '../components'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from '../../hooks/'
 import { useEffect, useMemo, useRef } from 'react'
-import { setActiveNote, startSavingNote, startUploadingFiles } from '../../store/journal'
+import {
+  setActiveNote,
+  startDeletingNote,
+  startSavingNote,
+  startUploadingFiles
+} from '../../store/journal'
 import PopupManager from 'https://cdn.jsdelivr.net/gh/jorgeabrahan/popup_library@66c9181/popup/Popup.js'
 
 const Popup = new PopupManager('Actualización nota', 'close')
@@ -23,9 +28,7 @@ export const NoteView = () => {
     dispatch(setActiveNote(formState))
   }, [formState])
   useEffect(() => {
-    if (messageSaved.length > 0) {
-      Popup.content(messageSaved).options({ position: 'center' }).show()
-    }
+    if (messageSaved.length > 0) Popup.content(messageSaved).options({ position: 'center' }).show()
   }, [messageSaved])
 
   const onSaveNote = () => dispatch(startSavingNote())
@@ -33,7 +36,7 @@ export const NoteView = () => {
     if (target.files === 0) return
     dispatch(startUploadingFiles(target.files))
   }
-  const onDelete = () => {}
+  const onDelete = () => dispatch(startDeletingNote())
   return (
     <Grid
       className="animate__animated animate__fadeIn animate__faster"
