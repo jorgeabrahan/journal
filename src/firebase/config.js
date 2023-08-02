@@ -2,14 +2,14 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore/lite'
-import { apiKey } from '../secret'
+// import { apiKey } from '../secret'
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: apiKey,
+  apiKey: process.env.apiKey,
   authDomain: 'journal-27e84.firebaseapp.com',
   projectId: 'journal-27e84',
   storageBucket: 'journal-27e84.appspot.com',
